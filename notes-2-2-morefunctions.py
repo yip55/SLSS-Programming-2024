@@ -6,9 +6,9 @@ def stars(num_stars: int) -> str:
     """returns a given number of *"""
     value = ""
    
-   #if the value == 0 or value == 1 "*"
+    #if the value == 0 or value == 1 "*"
     # if value > 1 "*" * num_stars
-    #else negative number -> error
+    # else negative number -> error
     if num_stars == 0 or num_stars == 1:
         value = "*"
     elif num_stars > 1:
@@ -17,6 +17,14 @@ def stars(num_stars: int) -> str:
         value = "sorry, can't take negative numbers"
   
     return value
+
+def pyramid(base_width: int):
+    """prints a pyrimid of stars of given base width
+    params:
+        base_width - bottom row of stars 
+    """
+    for i in range(base_width):
+        print(stars(i+  1))
 
 
 # multiply stings 
@@ -28,3 +36,7 @@ print(stars(1)) # "*"
 print(stars(100)) 
 print(stars(0))
 print(stars(-1))
+
+pyramid(1)
+pyramid(5)
+pyramid(20)
