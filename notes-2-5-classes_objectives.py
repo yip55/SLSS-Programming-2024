@@ -70,7 +70,32 @@ class Pikachu(Pokemon):
             response = response + "it was super efffective."
 
         return response
+# Create a new child-class of pokemon for the type of your choice
+# If you don't know any pokemon, use this: https://pokemondb.net/pokedex/national
+#   - create a new child class
+#   - create a constructor and set the default values for its properties
+#       - i.e. its name, id, type, etc.
+#   - create a new method for its attack
+class Eevee(Pokemon):
+    def __init__(self, name="eeve"):
+        
+        super().__init__()
+        
+        self.name = name
+        self.id = 133
+        self.type = "normal"
+        self.actual_cry = "eevee"  
+    
+    def swift(self, defender: Pokemon) -> str:
+      
+        response = f"{self.name} used swift on {defender.name}"
 
+        if defender.type.lower() in ["rock", "steel"]:
+            response = response + "not every effective."
+        if defender.type.lower() in ["ghost"]:
+            response = response + "no effect."
+
+        return response
 # Create two Pokemon using our class
 # Make one Pokemon that is Pikachu
 pokemon_one = Pokemon()
