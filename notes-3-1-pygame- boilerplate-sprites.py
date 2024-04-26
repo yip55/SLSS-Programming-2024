@@ -2,8 +2,22 @@
 #   -boilerplate is useful to set up our environments
 #   -the sprite class has some really cool things in it 
 
+import random
 import pygame
+# --CONSTANTS--
+# COLOURS
+WHITE = (255, 255, 255)
+BLACK = (0, 0, 0)
+EMERALD = (21, 219, 147)
+RED = (255, 0, 0)
+GREEN = (0, 255, 0)
+BLUE = (0, 0, 255)
+GRAY = (128, 128, 128)
 
+WIDTH = 1280  # Pixels
+HEIGHT = 720
+SCREEN_SIZE = (WIDTH, HEIGHT)
+NUM_LOGOS = 20
 #create a class representing the dvd logo
 #   -child-class of pygame sprites
 #   -create a constructor method
@@ -24,9 +38,16 @@ class Dvdlogo(pygame.sprite.Sprite):
 
         self.rect = self.image.get_rect()
 
+        # spawn in a random location 
+        self.rect.x = random.randrange(0, WIDTH - self.rect.width)
+        self.rect.y = random.randrange(0, HEIGHT - self.rect.height)
+
+
+
         # velocity og the Dvd logo
-        self.vel_x = 5
-        self.vel_y = 3
+        self.vel_x = random.choice([-6, -5, -4, -3, 3, 4, 5, 6])
+        self.vel_y = random.choice([-6, -5, -4, -3, 3, 4, 5, 6])
+    
     def update(self):
         # update the location of the dvd logo
         self.rect.x += self.vel_x 
@@ -35,20 +56,20 @@ class Dvdlogo(pygame.sprite.Sprite):
         # bounce if reaches bottom
         # if the bottom of the sprite is past the bottom of the screen 
         # convert to negative (* -1)
-        if self.rect.bottom > 775:
+        if self.rect.bottom > HEIGHT:
             self.vel_y *= -1
 
         # top 
-        if self.rect.top > 0:
+        if self.rect.top < 0:
             self.vel_y *= -1
       
         # left
-        if self.rect.left < 1100:
-            self.vel_y *= -1
+        if self.rect.left < 0:
+            self.vel_x *= -1
 
         # right
-        if self.rect.left < 130:
-            self.vel_y *= -1
+        if self.rect.right > WIDTH:
+            self.vel_x *= -1
 
 
 
@@ -57,26 +78,14 @@ def start():
 
     pygame.init()
 
-    # --CONSTANTS--
-    # COLOURS
-    WHITE = (255, 255, 255)
-    BLACK = (0, 0, 0)
-    EMERALD = (21, 219, 147)
-    RED = (255, 0, 0)
-    GREEN = (0, 255, 0)
-    BLUE = (0, 0, 255)
-    GRAY = (128, 128, 128)
-
-    WIDTH = 1280  # Pixels
-    HEIGHT = 720
-    SCREEN_SIZE = (WIDTH, HEIGHT)
-
     # --VARIABLES--
     screen = pygame.display.set_mode(SCREEN_SIZE)
     done = False
     clock = pygame.time.Clock()
 
     pygame.display.set_caption("DVD Logo Sreensaver")
+
+    dvdlogo = Dvdlogo()
 
     #make a dvd logo object
     dvdlogo = Dvdlogo()
@@ -92,14 +101,21 @@ def start():
     all_sprites = pygame.sprite.Group()
 
     #add the dvd logo to the group of sprite
-    all_sprites.add(dvdlogo)
+    for _ in range(1):
+        all_sprites.add(Dvdlogo())
 
+    
     # --MAIN LOOP--
     while not done:
         # --- Event Listener
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 done = True
+            # if space is pressed, create a new dvd logo
+            # and add it to all_sprites
+            if event.type == pygame.KEYDOWN:
+                if pygame.key.get_pressed()[pygame.K_SPACE]:
+                    all_sprites.add(Dvdlogo())
 
         # --- Update the world state
         # TODO: update the location of the dvd logo 
