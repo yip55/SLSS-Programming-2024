@@ -1,4 +1,5 @@
 import pygame as pg
+import random 
 
 # --CONSTANTS--
 # COLOURS
@@ -33,7 +34,7 @@ class Snowflake(pg.sprite.Sprite):
 
         self.rect = self.image.get_rect()
         # spaw in the middle of the screen
-        self.rect.centerx = WIDTH // 2
+        self.rect.centerx = random.randrange(0, WIDTH +1)
         self.rect.centery = HEIGHT // 2
 def start():
     """Environment Setup and Game Loop"""
@@ -48,11 +49,12 @@ def start():
     # All sprites go in this sprite Group
     all_sprites = pg.sprite.Group()
 
-    # add one snowflake to the sprite group
-    all_sprites.add(Snowflake(12))
+    # create more snow
+    for _ in range(100):
+        all_sprites.add(Snowflake(10))
 
     pg.display.set_caption("<Snow Falling>")
-
+ 
     # --Main Loop--
     while not done:
         # --- Event Listener
