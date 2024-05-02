@@ -62,7 +62,8 @@ def start():
 
     # create more snow
     for _ in range(100):
-        all_sprites.add(Snowflake(10))
+        all_sprites.add(Snowflake(9))
+        all_sprites.add(Snowflake(11))
 
     pg.display.set_caption("<Snow Falling>")
  
