@@ -31,11 +31,22 @@ class Snowflake(pg.sprite.Sprite):
             (size // 2, size // 2), # draw in the middle of the blank image
             size // 2
         )
-
+        
         self.rect = self.image.get_rect()
+
         # spaw in the middle of the screen
         self.rect.centerx = random.randrange(0, WIDTH +1)
-        self.rect.centery = HEIGHT // 2
+        self.rect.centery = random.randrange(0, HEIGHT +1)
+       
+        self.vel_y = random.choice([3, 4, 5, 6])
+
+    def update(self):
+        # update the location of the dvd logo
+        self.rect.y += self.vel_y
+        if self.rect.y > HEIGHT:
+            self.rect.y = -10
+            
+
 def start():
     """Environment Setup and Game Loop"""
 
@@ -63,7 +74,7 @@ def start():
                 done = True
 
         # --- Update the world state
-
+        all_sprites.update()
         # --- Draw items
         screen.fill(BLACK)
 

@@ -53,9 +53,9 @@ class Dvdlogo(pygame.sprite.Sprite):
         self.rect.x += self.vel_x 
         self.rect.y += self.vel_y
 
-        # bounce if reaches bottom
-        # if the bottom of the sprite is past the bottom of the screen 
-        # convert to negative (* -1)
+        # # bounce if reaches bottom
+        # # if the bottom of the sprite is past the bottom of the screen 
+        # # convert to negative (* -1)
         if self.rect.bottom > HEIGHT:
             self.vel_y *= -1
 
