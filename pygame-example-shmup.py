@@ -1,7 +1,9 @@
 # pygame-example-shmup.py
 # Shoot 'em up
 import pygame as pg
+import random
 
+NUM_ENEMIES = 10
 # --CONSTANTS--
 # COLOURS
 WHITE = (255, 255, 255)
@@ -52,9 +54,41 @@ class Bullet(pg.sprite.Sprite):
         # spawn at the player
         self.rect.centerx = player_loc[0]
         self.rect.bottom = player_loc[1]
+       
+        # Set initial velocity to some random value
+        self.vel_y = random.choice(( -4, -5, -6))
+
+    def update(self):
+        self.rect.y += self.vel_y
 
 # TODO: enemies
 #   - move left to right to left 
+class Enemy(pg.sprite.Sprite):
+    def __init__(self):
+        super().__init__()
+
+        self.image = pg.image.load("./Images/mario.png")
+
+        self.rect = self.image.get_rect()
+        
+        self.rect.x = random.randrange(0, WIDTH - self.rect.width)
+        self.rect.y = random.randrange(0, HEIGHT - 400)
+
+        self.vel_x = random.choice((-6, -5, -4, 4, 5, 6))
+    
+    def update(self):
+        """Move the goomba and bounce it off the edge of the window"""
+        self.rect.x += self.vel_x
+       # Bounce
+        if self.rect.left < 0:
+            self.rect.left = 0  # keep it inside the screen
+            self.vel_x = -self.vel_x
+        if self.rect.right > WIDTH:
+            self.rect.right = WIDTH
+            self.vel_x = -self.vel_x
+
+
+
 def start():
     """Environment Setup and Game Loop"""
 
@@ -67,11 +101,19 @@ def start():
 
     # All sprites go in this sprite Group
     all_sprites = pg.sprite.Group()
-
+    enemy_sprites = pg.sprite.Group()
+    bullet_sprites = pg.sprite.Group()
+    
     # create a Player sprite object
     player = Player()
 
     all_sprites.add(player)
+
+    for _ in range(NUM_ENEMIES):
+        enemy = Enemy()
+        all_sprites.add(enemy)
+        enemy_sprites.add(enemy)
+
 
     pg.display.set_caption("<shoot 'em up>")
 
@@ -82,10 +124,19 @@ def start():
             if event.type == pg.QUIT:
                 done = True
             if event.type == pg.MOUSEBUTTONDOWN:
-                all_sprites.add(Bullet((player.rect.centerx, player.rect.top)))
+                bullet = Bullet((player.rect.centerx, player.rect.top))
+                all_sprites.add(bullet)
+                bullet_sprites.add(bullet)
 
         # --- Update the world state
         all_sprites.update()
+        
+        # Detect collision with enemies
+        for bullet in bullet_sprites:
+            enemies_collided = pg.sprite.spritecollide(bullet, enemy_sprites, True)
+
+            for enemy in enemies_collided:
+                bullet.kill()
 
         # --- Draw items
         screen.fill(BLACK)
