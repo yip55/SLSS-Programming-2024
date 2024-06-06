@@ -61,6 +61,10 @@ class Bullet(pg.sprite.Sprite):
     def update(self):
         self.rect.y += self.vel_y
 
+        # kill bullet if at top of screen
+        if self.rect.bottom < 0:
+            self.kill()
+
 # TODO: enemies
 #   - move left to right to left 
 class Enemy(pg.sprite.Sprite):
