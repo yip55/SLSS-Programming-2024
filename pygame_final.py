@@ -103,7 +103,18 @@ class Enemy(pg.sprite.Sprite):
             self.rect.y = -10
             self.rect.x = random.randrange(0, WIDTH - self.rect.width)
 
+class Finish_Line(pg.sprite.Sprite):
+    def __init__(self):
+        super().__init__()
 
+        self.image = pg.image.load("./Images/finish-line.png")
+        # Scale image
+        self.image = pg.transform.scale(self.image, (WIDTH, 100))
+        self.rect = self.image.get_rect()
+
+        # Set its position to the top
+        if self.rect.top <= 0:
+            self.rect.top = 0 
 
 
 def start():
@@ -115,18 +126,17 @@ def start():
     screen = pg.display.set_mode(SCREEN_SIZE)
     done = False
     clock = pg.time.Clock()
-    score = 0
     font = pg.font.SysFont("Furtura", 24)
 
     # All sprites go in this sprite Group
     all_sprites = pg.sprite.Group()
     enemy_sprites = pg.sprite.Group()
-    player_sprites = pg.sprite.Group()
     background_group = pg.sprite.Group()
+    
     # create a Player sprite object
     player = Player()
-
     all_sprites.add(player)
+    finished = False
     
     # Background creation
     bg = Background()
@@ -136,8 +146,10 @@ def start():
         enemy = Enemy()
         all_sprites.add(enemy)
         enemy_sprites.add(enemy)
-    pg.display.set_caption("< Pew Pew >")
 
+    finish_line = None
+
+    pg.display.set_caption("< vroom vroom >")
     # --Main Loop--
     while not done:
         # --- Event Listener
@@ -165,6 +177,11 @@ def start():
                 if event.key == pg.K_DOWN and player.change_y > 0:
                     player.stop_y()
         
+        # detect collosion with finish line
+        if finish_line and pg.sprite.collide_rect(player, finish_line):
+            pg.exit()
+        
+        
         # Detect collision with enemies
         enemies_collided = pg.sprite.spritecollide(player, enemy_sprites, False)
         
@@ -182,15 +199,20 @@ def start():
 
         # --- Update the world state
         all_sprites.update()
-        
+
+        # Get time elapsed
+        if pg.time.get_ticks() >= 100_000_000 and not finished:
+            # Spawn the finish line 
+            # add to all sprites group
+            finish_line = Finish_Line()
+            all_sprites.add(finish_line)
+
+            finished = True
 
         # --- Draw items
-
         background_group.draw(screen)
-
         all_sprites.draw(screen)
-        
-        # create text for score
+
         # create an image that has the score in it
         lives_image = font.render(
             f"Lives Remaining {int(player.lives_remaining)}", True, WHITE)
