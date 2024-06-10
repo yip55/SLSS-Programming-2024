@@ -201,7 +201,7 @@ def start():
         all_sprites.update()
 
         # Get time elapsed
-        if pg.time.get_ticks() >= 100_000_000 and not finished:
+        if pg.time.get_ticks() >= 100_000 and not finished:
             # Spawn the finish line 
             # add to all sprites group
             finish_line = Finish_Line()
